@@ -3,7 +3,7 @@
         <x-filament::modal>
             <x-slot name="trigger">
                 <x-filament::button color="success">
-                    {{__('Tạo mới')}}
+                    {{__('Create')}}
                 </x-filament::button>
             </x-slot>
 

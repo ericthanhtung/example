@@ -43,26 +43,26 @@ class ListPages extends Component implements HasForms, HasTable
         return $table
             ->query($this->getTableQuery())
             ->columns([
-                ViewColumn::make('name')->label(__('Tên'))
+                ViewColumn::make('name')
                     ->view('tables.columns.landing-page-name-column')->searchable()->sortable()->toggleable(),
-                ViewColumn::make('product')->label(__('Sản phẩm'))
+                ViewColumn::make('product')
                     ->view('tables.columns.landing-page-product-column')
                     ->tooltip(function (ViewColumn $column) {
                         return $column->getState();
                     })->searchable()->sortable()->toggleable(),
-                TextColumn::make('created_at')->label(__('Thời gian tạo'))->dateTime('d/m/Y H:i')->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->dateTime('d/m/Y H:i')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 EditAction::make('edit_name')
-                    ->label('Sửa tên')
+                    ->label('Edit name')
                     ->icon('heroicon-m-pencil-square')
                     ->color('warning')
                     ->form([
                         TextInput::make('name')
-                            ->label(__('Tên'))
+                            ->label(__('Name'))
                             ->required(),
                     ])
                     ->using(function (LandingPage $record, array $data): LandingPage {
@@ -70,10 +70,10 @@ class ListPages extends Component implements HasForms, HasTable
                         return $record;
                     }),
                 EditAction::make('update_product')
-                    ->label(__('Cập nhật sản phẩm'))
+                    ->label(__('Update product'))
                     ->form([
                         TagsInput::make('product')
-                            ->label(__('Sản phẩm'))
+                            ->label(__('Product'))
                             ->required(),
                     ])->color('info')
                     ->using(function (LandingPage $record, array $data): LandingPage {
@@ -92,7 +92,6 @@ class ListPages extends Component implements HasForms, HasTable
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label(__('Tên'))
                     ->required(),
             ])
             ->statePath('data')
