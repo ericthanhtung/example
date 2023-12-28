@@ -8,7 +8,7 @@
             </x-slot>
 
             <x-slot name="heading">
-                <div>{{__('Tạo Landing page mới')}}</div>
+                <div>{{__('Create Landing page')}}</div>
             </x-slot>
 
             <div class="w-full rounded-lg mx-auto">
@@ -16,7 +16,7 @@
                     {{ $this->form }}
                     <div class="text-center my-4">
                         <x-filament::button type="submit" color="success">
-                            {{__('Tạo mới')}}
+                            {{__('Create')}}
                         </x-filament::button>
                     </div>
                 </form>
