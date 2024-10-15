@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Page;
 
+use App\Jobs\DownloadPdfJob;
 use App\Models\LandingPage;
 use App\Services\SalekitApiService;
 use Filament\Forms\Components\DatePicker;
@@ -28,93 +29,19 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Filament\Tables\Actions\Action;
 
-class ListPages extends Component implements HasForms, HasTable
+class ListPages extends Component
 {
-    use InteractsWithTable;
-    use InteractsWithForms;
-
-    public ?array $data = [];
-
-    public function table(Table $table): Table
-    {
-        return $table
-            ->query($this->getTableQuery())
-            ->columns([
-                ViewColumn::make('name')
-                    ->view('tables.columns.landing-page-name-column')->searchable()->sortable()->toggleable(),
-                ViewColumn::make('product')
-                    ->view('tables.columns.landing-page-product-column')
-                    ->tooltip(function (ViewColumn $column) {
-                        return $column->getState();
-                    })->searchable()->sortable()->toggleable(),
-                TextColumn::make('created_at')->dateTime('d/m/Y H:i')->sortable()->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                EditAction::make('edit_name')
-                    ->label('Edit name')
-                    ->icon('heroicon-m-pencil-square')
-                    ->color('warning')
-                    ->form([
-                        TextInput::make('name')
-                            ->label(__('Name'))
-                            ->required(),
-                    ])
-                    ->using(function (LandingPage $record, array $data): LandingPage {
-                        $record->update($data);
-                        return $record;
-                    }),
-                EditAction::make('update_product')
-                    ->label(__('Update product'))
-                    ->form([
-                        TagsInput::make('product')
-                            ->label(__('Product'))
-                            ->required(),
-                    ])->color('info')
-                    ->using(function (LandingPage $record, array $data): LandingPage {
-                        $record->update($data);
-                        return $record;
-                    }),
-            ])
-            ->bulkActions([
-                //
-            ])
-            ->defaultSort('created_at', 'desc');
-    }
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                TextInput::make('name')
-                    ->required(),
-            ])
-            ->statePath('data')
-            ->model(LandingPage::class);
-    }
-
-    /**
-     * @throws BindingResolutionException
-     */
-    public function create(): void
-    {
-        $data = $this->form->getState();
-        LandingPage::create($data);
-        to_route('page');
-    }
-
-    protected function getTableQuery(): Builder
-    {
-        return LandingPage::query();
-    }
-
     public function render()
     {
+        for ($skipCount = 0; $skipCount <= 285; $skipCount += 10) {
+            DownloadPdfJob::dispatch($skipCount);
+        }
+        dd(1);
         return view('livewire.page.list-pages');
     }
 }
